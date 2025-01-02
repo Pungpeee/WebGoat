@@ -16,7 +16,7 @@
 //         stage('Build Docker Image') {
 //             steps {
 //                 script {
-//                     docker.build("pungpeee19/2-big-code-webgoat:latest")
+//                     docker.build("pungpeee19/2-big-code-juiceshop:latest")
 //                 }
 //             }
 //         }
@@ -27,7 +27,7 @@
 //                     sh '''
 //                     echo ${DOCKER_TOKEN} | docker login -u pungpeee19 --password-stdin
                     
-//                     docker push pungpeee19/2-big-code-webgoat:latest
+//                     docker push pungpeee19/2-big-code-juiceshop:latest
 //                     '''
 //                 }
 //             }
@@ -38,8 +38,8 @@
 //                     sh '''
 //                     ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "
 //                         echo ${DOCKER_TOKEN} | docker login -u pungpeee19 --password-stdin && \
-//                         docker pull pungpeee19/2-big-code-webgoat:latest && \
-//                         docker run -d --restart=always -p 1001:8080 --name 2-big-code-webgoat pungpeee19/2-big-code-webgoat:latest
+//                         docker pull pungpeee19/2-big-code-juiceshop:latest && \
+//                         docker run -d --restart=always -p 1001:3000 --name 2-big-code-juiceshop pungpeee19/2-big-code-juiceshop:latest
 //                     "
 //                     '''
 //                 }
@@ -75,7 +75,7 @@ pipeline {
                     docker.image('sonarsource/sonar-scanner-cli:latest').inside {
                         sh '''
                         sonar-scanner \
-                            -Dsonar.projectKey=2-big-code-webgoat \
+                            -Dsonar.projectKey=2-big-code-juiceshop \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=${SONAR_HOST_URL} \
                             -Dsonar.login=${SONAR_TOKEN}
@@ -89,7 +89,7 @@ pipeline {
         stage('Build Docker Image-ls') {
             steps {
                 script {
-                    docker.build("pungpeee19/2-big-code-webgoat:latest")
+                    docker.build("pungpeee19/2-big-code-juiceshop:latest")
                 }
             }
         }
@@ -97,23 +97,23 @@ pipeline {
         // stage('Build Fix - Snyk Scan Image-ls') {
         //     steps {
         //         withEnv(["NODE_TLS_REJECT_UNAUTHORIZED=0"]) {
-        //             sh 'snyk container test --token=$SNYK_TOKEN --org=f7c31024-a0f2-4c34-bdbb-7aef1b436117 --project-name=Pungpeee/2-big-code-webgoat pungpeee19/2-big-code-webgoat --file=requirements.txt --allow-missing -d'
+        //             sh 'snyk container test --token=$SNYK_TOKEN --org=f7c31024-a0f2-4c34-bdbb-7aef1b436117 --project-name=Pungpeee/2-big-code-juiceshop pungpeee19/2-big-code-juiceshop --file=requirements.txt --allow-missing -d'
         //         }
         //             // snykSecurity(
         //             //     snykInstallation: 'snyk@manual',
         //             //     snykTokenId: 'SNYK_TOKEN',
-        //             //     projectName: 'Pungpeee/2-big-code-webgoat',
+        //             //     projectName: 'Pungpeee/2-big-code-juiceshop',
         //             //     failOnIssues: false,
         //             //     targetFile: './Dockerfile',
         //             //     severity: 'critical'
         //             // )
         //         // script {
         //         //    withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
-        //         //        sh 'snyk container monitor --token=$SNYK_TOKEN pungpeee19/2-big-code-webgoat --org=f7c31024-a0f2-4c34-bdbb-7aef1b436117 -d'
+        //         //        sh 'snyk container monitor --token=$SNYK_TOKEN pungpeee19/2-big-code-juiceshop --org=f7c31024-a0f2-4c34-bdbb-7aef1b436117 -d'
         //         //    }
         //         //      sh '''   
         //         //      // # Run Snyk container scan
-        //         //         // snyk container test pungpeee19/2-big-code-webgoat:latest \
+        //         //         // snyk container test pungpeee19/2-big-code-juiceshop:latest \
         //         //         //     --severity-threshold=critical \
         //         //         //     --file=./Dockerfile \
         //         //         //     --json
@@ -129,7 +129,7 @@ pipeline {
                 script {
                     sh '''
                     echo ${DOCKER_TOKEN} | docker login -u pungpeee19 --password-stdin
-                    docker push pungpeee19/2-big-code-webgoat:latest
+                    docker push pungpeee19/2-big-code-juiceshop:latest
                     '''
                 }
             }
@@ -143,7 +143,7 @@ pipeline {
                            --cache-dir /mnt/trivy-cache \
                            --pkg-types os,library \
                            --scanners vuln \
-                           pungpeee19/2-big-code-webgoat:latest
+                           pungpeee19/2-big-code-juiceshop:latest
 
                     '''
                 }
@@ -156,8 +156,8 @@ pipeline {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "
                         echo ${DOCKER_TOKEN} | docker login -u pungpeee19 --password-stdin && \
-                        docker pull pungpeee19/2-big-code-webgoat:latest && \
-                        docker run -d --restart=always -p 1001:8080 --name 2-big-code-webgoat pungpeee19/2-big-code-webgoat:latest
+                        docker pull pungpeee19/2-big-code-juiceshop:latest && \
+                        docker run -d --restart=always -p 1001:3000 --name 2-big-code-juiceshop pungpeee19/2-big-code-juiceshop:latest
                     "
                     '''
                 }
@@ -168,14 +168,14 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        docker exec devsecops-zap zap-baseline.py -t http://20.212.250.197:1001 -r zapreport-2-big-code-webgoat-jk.html -I   || true
+                        docker exec devsecops-zap zap-baseline.py -t http://20.212.250.197:1001 -r zapreport-2-big-code-juiceshop-jk.html -I   || true
                           
                     '''
-                    sh 'docker cp devsecops-zap:/zap/wrk/zapreport-2-big-code-webgoat-jk.html /mnt/zap-reports/zapreport-2-big-code-webgoat-jk.html        '
+                    sh 'docker cp devsecops-zap:/zap/wrk/zapreport-2-big-code-juiceshop-jk.html /mnt/zap-reports/zapreport-2-big-code-juiceshop-jk.html        '
                 publishHTML([
-                        reportName: 'zapreport-2-big-code-webgoat-jenkins',
+                        reportName: 'zapreport-2-big-code-juiceshop-jenkins',
                         reportDir: '/mnt/zap-reports/',
-                        reportFiles: 'zapreport-2-big-code-webgoat-jk.html',
+                        reportFiles: 'zapreport-2-big-code-juiceshop-jk.html',
                         keepAll: true,
                         allowMissing: true,
                         alwaysLinkToLastBuild: true

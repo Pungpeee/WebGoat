@@ -13,12 +13,12 @@
 #         uses: actions/checkout@v3
 
 #       - name: Build image
-#         run: docker build -t pungpeee19/2-big-code-webgoat:latest .
+#         run: docker build -t pungpeee19/2-big-code-juiceshop:latest .
 
 #       - name: Push image to Docker Hub
 #         run: |
 #           docker login -u pungpeee19 -p ${{ secrets.DOCKER_HUB_TOKEN }}
-#           docker push pungpeee19/2-big-code-webgoat:latest
+#           docker push pungpeee19/2-big-code-juiceshop:latest
  
 #   deploy:
 #     needs: build
@@ -38,16 +38,16 @@
 #           echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u pungpeee19 --password-stdin
 
 #           # Pull the latest image
-#           docker pull pungpeee19/2-big-code-webgoat:latest
+#           docker pull pungpeee19/2-big-code-juiceshop:latest
 
 #           # Stop and remove the existing container if it exists
-#           if [ $(docker ps -q -f name=2-big-code-webgoat) ]; then
-#             docker stop 2-big-code-webgoat
-#             docker rm 2-big-code-webgoat
+#           if [ $(docker ps -q -f name=2-big-code-juiceshop) ]; then
+#             docker stop 2-big-code-juiceshop
+#             docker rm 2-big-code-juiceshop
 #           fi
 
 #           # Run the new container
-#           docker run -d --restart=always -p 1001:8080 --name 2-big-code-webgoat pungpeee19/2-big-code-webgoat:latest
+#           docker run -d --restart=always -p 1001:3000 --name 2-big-code-juiceshop pungpeee19/2-big-code-juiceshop:latest
 
 #           # Verify running containers
 #           docker ps -a
@@ -67,8 +67,8 @@
 #       #   run: |
 #       #       docker login -u pungpeee19 -p ${{ secrets.DOCKER_HUB_TOKEN }}
 #       #       ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.HOST }} 
-#       #       docker pull pungpeee19/2-big-code-webgoat:latest
+#       #       docker pull pungpeee19/2-big-code-juiceshop:latest
 #       #       docker images
-#       #       docker run -d --restart=always -p 1001:8080 \
-#       #           --name 2-big-code-webgoat \
-#       #           pungpeee19/2-big-code-webgoat:latest
+#       #       docker run -d --restart=always -p 1001:3000 \
+#       #           --name 2-big-code-juiceshop \
+#       #           pungpeee19/2-big-code-juiceshop:latest
