@@ -5,13 +5,18 @@ FROM node:20-buster as builder
 WORKDIR /juice-shop
 COPY . .
 
+# Adjust permissions before running npm install
+RUN chmod -R 755 /juice-shop/data && \
+    chown -R node:node /juice-shop
+
+# Switch to non-root user for better security during the build
+USER node
+
 # Install production dependencies and prepare the application
 RUN npm install --omit=dev --unsafe-perm \
     && npm dedupe --omit=dev \
     && rm -rf frontend/node_modules frontend/.angular frontend/src/assets \
-    && mkdir logs && chown -R 65532 logs \
-    && chgrp -R 0 ftp/ frontend/dist/ logs/ data/ i18n/ \
-    && chmod -R g=u ftp/ frontend/dist/ logs/ data/ i18n/ \
+    && mkdir logs \
     && rm -f data/chatbot/botDefaultTrainingData.json ftp/legal.md i18n/*.json
 
 # Generate SBOM
@@ -40,6 +45,7 @@ COPY --from=builder /juice-shop .
 USER 65532
 EXPOSE 3000
 CMD ["/juice-shop/build/app.js"]
+
 
 #-------------------------------------------------------------------------------------------------------------------------------------------
 
